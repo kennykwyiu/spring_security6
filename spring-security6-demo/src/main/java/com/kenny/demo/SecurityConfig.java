@@ -28,25 +28,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login.html", "/csrf", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/index.html", "/").authenticated()
+            .authorizeHttpRequests(authorize -> authorize
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                .loginPage("/login.html")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/login.html?error=true")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login.html")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            );
+            .oauth2Login(withDefaults());
         return http.build();
     }
 } 
