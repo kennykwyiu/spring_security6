@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome - Spring Security 6 Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6fb; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .container { background: #fff; padding: 2rem 2.5rem; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); width: 340px; text-align: center; }
+        h1 { color: #1976d2; margin-bottom: 1rem; }
+        p { color: #333; margin-bottom: 2rem; }
+        a.button { display: inline-block; padding: 0.75rem 1.5rem; background: #1976d2; color: #fff; border: none; border-radius: 6px; font-size: 1rem; text-decoration: none; cursor: pointer; }
+        a.button:hover { background: #1565c0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome!</h1>
+        <p>You are now logged in to the Spring Security 6 Demo.</p>
+        <form id="logoutForm" action="/logout" method="post" style="display:inline;">
+            <input type="hidden" name="_csrf" id="logoutCsrf" value="">
+            <button class="button" type="submit">Logout</button>
+        </form>
+        <button class="button" type="button" onclick="sayHelloApi()">Say Hello (API)</button>
+    </div>
+    <script>
+    // Fetch CSRF token for logout form
+    fetch('/csrf', { credentials: 'same-origin' })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('logoutCsrf').value = data.token;
+        });
+    function sayHelloApi() {
+        fetch('/hello', { credentials: 'same-origin' })
+            .then(response => response.text())
+            .then(msg => alert(msg))
+            .catch(() => alert('Failed to call /hello'));
+    }
+    </script>
+</body>
+</html> 
